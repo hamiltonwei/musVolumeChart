@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+    <body>
+        <div style="border:1px solid">
+            <p>WRONG</p>
+        </div>
+        
+        <div id="s2", style="border:1px solid">
+            <p></p>
+            <p></p>
+            <p></p>
+        </div>
+
+        <div id="s3", style="border:1px solid">
+        </div>
+
+        <div id="matrix", style="border:1px solid">
+        </div>
+    </body>
+    <script>
+            var myData = ["Hello World!"];
+            // this will NOT work, it must be an array
+            // var myData = "Hello World!";
+
+            // This "binds" our "myData" array to the <p> element in the HTML, so we can use the data to manipulate its contents.
+            var p = d3.select("body")
+                .selectAll("p")
+                .data(myData)
+                .text(function (d) {
+                    return d;
+                });
+
+            var myData2 = ["Hello 1", "Hello 2", "Hello 3", "Hello 4"];
+            var p2 = d3.select("body")
+                .select("#s2")
+                .selectAll("p")
+                .data(myData2)
+                .text(function (d, i) {
+                    return d;
+                });
+
+            // enter() function is used to create a DOM element when it doesn't exist
+            // e.g. the HTML doesn't contain "span" anywhere, so we create one.
+            var data = [4, 1, 6, 2, 8, 9];
+            var body = d3.select("body")
+                .selectAll("span") // this returns an empty array, cuz we never had and span elements
+                .data(data) // we bind the data to this. But none of those datapoints has a correspondence. They are lonely
+                .enter() // we create corresponding place holder elements for all the lonely datapoints 
+                .append("span") // we add a <span> element for the place holder.
+                .text(function(d) { return d + " "; })
+                .style('color', function(d) {
+                    if (d % 2 == 0){
+                        return "green";
+                    }
+                    else{
+                        return "red";
+                    }
+                }); // this change the color to red if odd and green if even
+
+            //exercise: display the matrix in the next division:
+            var matrix = [
+                [1, 2, 3, 4],
+                [5, 6, 7, 8],
+                [9, 10, 11, 12],
+                [13, 14, 15, 16]];
+            
+            var tr = d3.select("body")
+                .select("#matrix")
+                .append("table")
+                .selectAll("tr")
+                .data(matrix)  // here, you are NOT binding the whole matrix to each row. D3 automatically correspond each point in the data array to each selected HTML element.
+                .enter()
+                .append("tr")
+
+            //https://stackoverflow.com/questions/21786002/what-does-datafunctiond-return-d-return-in-d3#:~:text=function(d)%20%7B%20return%20d%3B%20%7D%20is%20simply%20saying,append%20the%20table%20cell%20elements.
+            var td = tr.selectAll("td")
+            .data(function (d) {    // Here, d is the data already bounded to the tr, which is an array.
+                console.log(d);
+                // when you return d (that is an array), it will be split into its individual elements and each is bounded to the HTML. 
+                // Right now the HTML is empty, but in the next step we will use enter to create some. 
+                return d;           
+            })
+            .enter()    // create placeholders for each element in an inner array
+            .append("td") // creates <td> in each placeholder
+            .text(function (d) {
+                console.log(d);
+                return d; // add value of each inner array as a text in <td>
+            });
+
+            // think about "enter" as going into a nested level. "exit" as going out. 
+            var myData = ["Hello World!"];
+            var p = d3.select("body")
+                        .selectAll("p")
+                        .data(myData)
+                        .text(function (d, i) {
+                            return d;
+                        })
+                        .exit()
+                        .remove();
+
+            // datum is the singular of "data". It can be used to bind data that is not an array.
+            d3.select("body")
+                .select("p")
+                .datum(100)
+                .text(function (d, i) {
+                    return d;
+                });
+            </script>
+
+
+        </body>
+    </script>
+</html>
