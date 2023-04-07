@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+
+    <body>
+        <p></p>
+        <p></p>
+        <p></p>
+
+        <div style="border:1px">
+            <p>Error: this is error</p>
+            <p>Warning: this is warning</p>
+        </div>
+    </body>
+
+    <script>
+        // write your d3 code here.. 
+
+        // notice that the "d" inside function(d, i) would be the "data" of the particular element selected.
+        // in this case the "d" is the content of the text
+        var data = [100, 200, 300];
+        var paragraph = d3.select("body")
+            .selectAll("p")
+            .data(data)
+            .text(function(d, i){
+                console.log("d: " + d);
+                console.log("i: " + i);
+                console.log("this: " + this);
+
+                return i + d;
+            });
+
+        // in this no .data(data) is be called, so no data is being binded. so we don't need the "d" here to access the data
+        // If you try to log the "d" it will show it as "undefined".
+        // we also don't need to use an annonymous function.
+        d3.select("div")
+            .selectAll("p")
+            .style("color", function(d){
+                var text = this.innerText;
+                if (text.indexOf("Error") >= 0) {
+                    console.log("d: " + d);
+                    return "red";
+                } 
+                else if (text.indexOf("Warning") >= 0) {
+                    console.log("d: "+ d);
+                    return "orange";
+                }
+            });
+
+    </script>
+
+</html>

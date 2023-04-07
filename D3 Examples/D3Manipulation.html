@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+
+    <style>
+        .error{
+            color:red;
+            font-weight:bold;
+        }
+    </style>
+
+    <body>
+        <div style="border:1px solid" >
+            <p id="p1">11111</p>
+        </div>
+        <p id="p2">First Paragraph</p>
+        <p>Second Paragraph</p>
+
+        <label>D3</label><input type="checkbox" />
+        <label>jQuery</label><input type="checkbox" />
+
+        <p id="p4">This is gonna be a class</p>
+    </body>
+
+    <script>
+        //Isolate each of the code block below to see their individual effects
+        //check their official documentations if there are inconsistencies.
+
+        //text() function adds <text/> elements
+        d3.select("p").text("This is paragraph.");
+        //note: the above can be rewritten w/o method chaining:
+        var bodyElement = d3.select("body");
+        var paragraph = d3.select("p");
+        paragraph.text("This is a paragraph... no method chaining!");
+
+        //append() function adds another element at the end of the selection
+        d3.select("body").append("p");
+        d3.select("body").selectAll("p").text("All paragraphs");
+
+        // insert function adds element right after the selected element
+        d3.select("div").insert("p").text("Second paragraph in the divider");
+
+        //html() directly REPLACES the verbose html inside the selected element
+        d3.select("p").html("<span style=\"color:green\">This is new inner green html.</span>");
+
+        //.attr direct sets the attribute of the selected element
+        d3.select("#p2").attr("class", "error");
+
+        //property() apply attributes that can't be done with attr()
+        d3.select("input").property("checked", true);
+
+        //classed() maeks the selected paragraphs a class
+        d3.select("#p4").text("this is the classed paragraph");
+        d3.select("#p4").classed("error", true);
+    </script>
+</html>

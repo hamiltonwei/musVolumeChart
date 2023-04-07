@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+
+<!-- When running int the browser, this part will actually be manipulated by the script -->
+
+<p id="p1">First paragraph</p>
+<p id="p2">Second paragraph</p>
+
+<table>
+    <tr>
+        <td>
+            One
+        </td>
+        <td>
+            Two
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Three
+        </td>
+        <td>
+            Four
+        </td>
+    </tr>
+</table>
+
+
+<script>
+    d3.select("p").style("color", "green");
+    d3.select("#p2").style("color", "red");
+    // You can use element name, class name etc. in selectAll()
+    d3.selectAll("p").style("color", "yellow");
+
+    // Combining select and select all let's you select nested elements
+    // select() selects the first element. selectAll() selects all elements.
+    d3.select("tr").selectAll("td").style("background-color", "red");
+</script>
+</html>
