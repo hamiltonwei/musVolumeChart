@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+<script>
+    // if the number of pixel and the data value is 1 to 1, this data can't fit on most computer screen! 
+    // (e.g. if your resolution is 1080p then 2000 pixels will go outside of the screen)
+    var data = [100, 400, 300, 900, 850, 2000];
+
+    var width = 600,
+        barHeight = 20,
+        margin = 1;
+    
+    // to solve this problem, we define a scale to reduce (or increase) the number of pixel represented by each unit of data.
+    var scale = d3.scaleLinear()
+                .domain([d3.min(data), d3.max(data)]) // domain is the min and max of the data input
+                .range([50, 500]);  // range is the min and max of the number of pixels outputed
+                // the range should be a bit smaller than the width, other wise the text can get truncated.
+
+    // next we create the svg graphics we will be using
+    var svg = d3.select("body")
+                .append("svg")
+                .attr("width", width)   // this width here is the initial width. It will eventually be replaced with the actual data.
+                .attr("height", barHeight * data.length);
+    
+    // next we transform the svg graphics to have the corret height and width
+    var g = svg.selectAll("g")
+               .data(data)
+               .enter()
+               .append("g")
+               .attr("transform", function(d, i){
+                   return "translate(0," + i * barHeight + ")";
+               });
+    
+    // each svg graphics contains a rectangle and a text. we are going to draw these two here:
+    // draw the rectangle for the svg graphics
+    g.append("rect")
+       .attr("width", function(d){
+            return scale(d);
+       })
+       .attr("height", barHeight - margin)
+
+    g.append("text")
+       .attr("x", function (d) { return (scale(d)); })
+       .attr("y", barHeight / 2)
+       .attr("dy", ".35em")
+       .attr("fill", "red")
+       .text(function (d) { return d; });
+
+</script>
+</body>
