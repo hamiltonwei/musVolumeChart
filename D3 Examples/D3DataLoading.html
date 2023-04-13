@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+
+<script>
+    // in order to load the CSV from local storage, we must first set up a web server
+    // because most browsers won't allow loading local files
+    // of course, setting up a full fledged web server to test some frontend code like this is just too much...
+    // in VSCode, we can avoid using chrome by installing "Preview on Web Browser"
+    // also check out: https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/set_up_a_local_testing_server 
+    d3.csv("./employees.csv", function(data) { // NOTE: the csv CANNOT have any leading or trailing space bar in the data or header. D3 won't be able to parse it out!
+        for (var i = 0; i < data.length; i ++){
+            console.log(data[i].Name);
+            console.log(data[i].Age);
+        }
+        // console.log(data); // If you load the data directly it will be treated as an array of objects.
+
+    });
+    
+    // Here are some alternative way to load the data:
+    // d3.request("/data/employees.csv")
+    // .mimeType("text/csv")
+    // .response(function (xhr) { return d3.csvParse(xhr.responseText); })
+    // .get(function(data) {
+    //     console.log(data);
+    //  });
+    
+    // Here we convert the data to upper caese:
+    d3.csv("./employees.csv")
+      .row(function(d) {
+            return {
+                age: d.Age,
+                name: d.Name.toUpperCase() // we convert the name to upper case here
+        }})
+      .get(function(data){
+        console.log(data);
+    });
+
+    //TODO: How to bind the data we just loaded?
+    d3.csv("./employees.csv", function(error, data) {
+        if (error){
+            return console.warn(error) // this can check any error when loading the data
+        }
+
+        d3.select("body")
+        .selectAll("p")
+        .data(data)
+        .enter()
+        .append("p")
+        .text(function(d) {
+            return d.Name + ", " + d.Age;
+        });
+    });
+    
+</script>
+</body>
+</html>
