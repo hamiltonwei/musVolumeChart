@@ -44,9 +44,10 @@
         yScale.domain([0, d3.max(data, function(d) { return d.value; })]);
 
         // Defines the x axis and the year label
-        g.append("g")
-         .attr("transform", "translate(0," + height + ")")
-         .call(d3.axisBottom(xScale))
+        g.append("g")   // this groups all elements of the x axis.
+         .attr("transform", "translate(0," + height + ")") // this makes sure x-axis is at the correct location
+         .call(d3.axisBottom(xScale)) // this "calls" a function xScale to append a bunch of svg elements in the group, forming the axis.
+         // this gives the label for the x-axis
          .append("text")
          .attr("y", height - 250)
          .attr("x", width - 100)
