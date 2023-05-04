@@ -19,7 +19,7 @@ The requirements that are in scope for this project are:
 
 The requirement that are OUT OF SCOPE for this project are:
 * Load real data in an efficient and user friendly way. 
-    * The data are there just so that we can test the chart. Making a good back end isn't the purpose of this prototype.
+    * We do want to be able to load some music data, but the data are there just so that we can test the chart. We don't need to load them in an extremely efficient and user friendly way. Any quick and dirty method to load the data just so we can use it for testing is good enough (e.g. you download a CSV and use excel to add some new columns, and use that new CSV as the data source. That's good enough)
 * Host this project on a web server.
 * Implement any backend code.
 * Able to add new charts easily
