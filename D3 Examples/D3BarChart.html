@@ -41,7 +41,7 @@
 
         // Now that we loaded the csv file, the domain of the scale will come from the data.
         xScale.domain(data.map(function(d) { return d.year; }));
-        yScale.domain([0, d3.max(data, function(d) { return d.value; })]);
+        yScale.domain([0, d3.max(data, function(d) { return +d.value; }) + 10]);
 
         // Defines the x axis and the year label
         g.append("g")   // this groups all elements of the x axis.
