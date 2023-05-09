@@ -25,55 +25,66 @@
               "translate(" + margin.left + "," + margin.top + ")");
 
     //Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv", function(data) {
+    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered_wide.csv", function(data) {
 
-    // group the data: one array for each value of the X axis.
-    var sumstat = d3.nest()
-      .key(function(d) { return d.year;})
-      .entries(data);
+      var keys = data.columns.slice(1);
 
-    // Stack the data: each group will be represented on top of each other
-    var mygroups = ["Helen", "Amanda", "Ashley"] // list of group names
-    var mygroup = [1,2,3] // list of group names
-    var stackedData = d3.stack()
-      .keys(mygroup)
-      .value(function(d, key){
-        return d.values[key].n
-      })
-      (sumstat)
+      // Add X axis
+      var x = d3.scaleLinear()
+          .domain(d3.extent(data, function(d) { return d.year; }))
+          .range([ 0, width ]);
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x).ticks(5));
 
-    // Add X axis --> it is a date format
-    var x = d3.scaleLinear()
-      .domain(d3.extent(data, function(d) { return d.year; }))
-      .range([ 0, width ]);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).ticks(5));
+      // Add Y axis
+      var y = d3.scaleLinear()
+        .domain([0, 200000])
+        .range([ height, 0 ]);
+      svg.append("g")
+        .call(d3.axisLeft(y));
 
-    // Add Y axis
-    var y = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return +d.n; })*1.2])
-      .range([ height, 0 ]);
-    svg.append("g")
-      .call(d3.axisLeft(y));
+      // color palette
+      var color = d3.scaleOrdinal()
+        .domain(keys)
+        .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
 
-    // color palette
-    var color = d3.scaleOrdinal()
-      .domain(mygroups)
-      .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+      // Stack the data: each group will be represented on top of each other
+      var stacker = d3.stack().keys(keys);
+      var stackedDataTemp = stacker(data);
+      var stackedData = []
+      for (const singleStackTemp of stackedDataTemp){
+        var singleStack = [];
+        for (const element of singleStackTemp){
+          singleStack.push({
+            year: element.data.year, 
+            name: singleStackTemp.key,
+            value: element.slice(0,3)});
+        }
+        stackedData.push(singleStack);
+      }
 
-    // Show the areas
-    svg
-      .selectAll("mylayers")
-      .data(stackedData)
-      .enter()
-      .append("path")
-        .style("fill", function(d) { name = mygroups[d.key-1] ;  return color(name); })
-        .attr("d", d3.area()
-          .x(function(d, i) { return x(d.data.key); })
-          .y0(function(d) { return y(d[0]); })
-          .y1(function(d) { return y(d[1]); })
-      )
+      var areaGenerator = d3.area()
+            .x(function(d) { return x(d.year)})
+            .y0(function(d) { return y(d.value[0]) })
+            .y1(function(d) { return y(d.value[1]) });
 
-})
+      // var areaGenerator = d3.area()
+      //   .x(function(d, i) { return x(d.data.year); })
+      //   .y0(function(d) { return y(d[0]); })
+      //   .y1(function(d) { return y(d[1]); })
+
+      //stack the data?
+      // var stackedData = d3.stack()
+      //   .keys(keys)
+      //   (data)
+      
+      // Show the areas
+      svg
+        .selectAll("mylayers")
+        .data(stackedData)
+        .enter()
+        .append("path") 
+          .style("fill", function(d) { return color(d[0].name)})
+          .attr("d", data => areaGenerator(data))})
     </script>

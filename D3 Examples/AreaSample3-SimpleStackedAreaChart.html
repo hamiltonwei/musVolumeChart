@@ -80,7 +80,7 @@
     // Copy the stack offsets back into the data.
     // we need this code section to reformat the data to include year information.
     // originally, stackedValues is [[num11, num12, ...], [num21, num22, num23...]]
-    // we make it look like [{year: year1, value: [num1, num2,...]}, {year2, [num1, num2....]}, {year3, [num1....]}]
+    // we make it look like [[{year: year1, value: [aDatanum1, aDatanum2,...]}, {year2, [aDatanum1,....]}, {year3, [aDatanum1....]}], [{year: year1, value: [bDataNum1]}, {year2}....]]
     stackedValues.forEach((layer, index) => {
         const currentStack = [];
         layer.forEach((d, i) => {
