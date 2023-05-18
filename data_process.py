@@ -20,6 +20,9 @@ def find_new_scrubbles(df: pd.DataFrame):
 
 
 def my_agg(x):
+    '''
+    This is used in df.gropby.apply to apply multiple aggregation functions to a group.
+    '''
     names = {
         "Total_Count": x["Day"].count(),
         "New_count": x[x["IsNewScrubble"] == "True"]["Day"].count()
@@ -32,24 +35,25 @@ def aggregate_scrubbles(df: pd.DataFrame):
     aggregate the number of old scrubbles and new scrubbles by date
     '''
     df_agg = df.groupby("Day").apply(my_agg).reset_index()
-    return df_agg
     #TODO: Need to fill in the missing days with 0.
+    return df_agg
+
+
+def load_csv(filename):
+    df = pd.read_csv(filename)
+    df["Time"] = pd.to_datetime(df.Time, format="mixed")
+    df["Day"] = df['Time'].dt.date
+    return df
 
 
 if __name__ == "__main__":
     # Allow this script to take a CSV file as argument. 
-    print(sys.argv)
     filename = sys.argv[1]
 
     #TODO: Check if the CSV file is of the correct format. If not, give an error message and exit.
 
-    # Load the CSV file with Panda
-    df = pd.read_csv(filename)
-    df["Time"] = pd.to_datetime(df.Time, format="mixed")
-    df["Day"] = df['Time'].dt.date
-
+    df = load_csv(filename)
     find_new_scrubbles(df)
-
     df_agg = aggregate_scrubbles(df)
     print(df_agg)
 
