@@ -19,12 +19,21 @@ def find_new_scrubbles(df: pd.DataFrame):
     df.loc[df['ScrubblesPrior'] <= 2, "IsNewScrubble"] = 'True'
 
 
+def my_agg(x):
+    names = {
+        "Total_Count": x["Day"].count(),
+        "New_count": x[x["IsNewScrubble"] == "True"]["Day"].count()
+    }
+    return pd.Series(names)
+
+
 def aggregate_scrubbles(df: pd.DataFrame):
     '''
     aggregate the number of old scrubbles and new scrubbles by date
     '''
-    #TODO
-    raise NotImplementedError
+    df_agg = df.groupby("Day").apply(my_agg).reset_index()
+    return df_agg
+    #TODO: Need to fill in the missing days with 0.
 
 
 if __name__ == "__main__":
@@ -37,12 +46,11 @@ if __name__ == "__main__":
     # Load the CSV file with Panda
     df = pd.read_csv(filename)
     df["Time"] = pd.to_datetime(df.Time, format="mixed")
+    df["Day"] = df['Time'].dt.date
 
-    # add a column that indicates if a scrubble is new or not
     find_new_scrubbles(df)
 
-    # 4. Run a SQL query or something that aggregate # of scrubbles and new scrubbles, sorted by date. Fill 0 if a date has no scrubbles
     df_agg = aggregate_scrubbles(df)
+    print(df_agg)
 
-    # 5. Export the result of the above query to a CSV. Done.
     df_agg.to_csv('processed_data/With_New_Scrubbles.csv', index=False)
