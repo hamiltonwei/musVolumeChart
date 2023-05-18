@@ -24,25 +24,39 @@ def my_agg(x):
     This is used in df.gropby.apply to apply multiple aggregation functions to a group.
     '''
     names = {
-        "Total_Count": x["Day"].count(),
-        "New_count": x[x["IsNewScrubble"] == "True"]["Day"].count()
+        "Total_Count": x["Date"].count(),
+        "Old_Count": x[x["IsNewScrubble"] == "False"]["Date"].count(),
+        "New_Count": x[x["IsNewScrubble"] == "True"]["Date"].count()
     }
     return pd.Series(names)
+
+
+def fill_missing_dates_with_zero(df_agg: pd.DataFrame):
+    # get the min and max date range of the dataframe "df_agg". In this case the date is the index, so we call "df_agg.index" to get the date
+    date_range = pd.date_range(df_agg.index.min(), df_agg.index.max(), freq="D")
+    # swap the index of df_agg. So the index has the correct range. Note we MUST make a copy of the dataframe when reindexing. fill all the NaN values with 0.
+    df_agg = df_agg.reindex(date_range).fillna(0)
+    return df_agg
 
 
 def aggregate_scrubbles(df: pd.DataFrame):
     '''
     aggregate the number of old scrubbles and new scrubbles by date
     '''
-    df_agg = df.groupby("Day").apply(my_agg).reset_index()
-    #TODO: Need to fill in the missing days with 0.
+    df_agg = df.groupby("Date").apply(my_agg)
+    df_agg = fill_missing_dates_with_zero(df_agg)
+    # reset_index also returns a new df by default. So we want this to be in-place instead
+    df_agg.reset_index(inplace=True)
+    #rename the date column (it's called "index" by default)
+    date_col_name = df_agg.columns[0]
+    df_agg.rename(columns={date_col_name:"Date"}, inplace=True)
     return df_agg
 
 
 def load_csv(filename):
     df = pd.read_csv(filename)
-    df["Time"] = pd.to_datetime(df.Time, format="mixed")
-    df["Day"] = df['Time'].dt.date
+    df["Time"] = pd.to_datetime(df["Time"], format="mixed")
+    df["Date"] = df['Time'].dt.date
     return df
 
 
