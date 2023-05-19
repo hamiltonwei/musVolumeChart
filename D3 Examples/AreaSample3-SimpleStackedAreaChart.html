@@ -66,7 +66,7 @@
     .attr("transform", `translate(-${margin.left - strokeWidth},-${margin.top})`);
 
     // Create stack
-    const stack = d3.stack().keys(["aData", "bData"]);
+    const stack = d3.stack().keys(["aData", "bData"]); // stack is a function that we use to stack the data together
     const stackedValues = stack(data);
     // stackedValues returns
     // [
@@ -75,7 +75,7 @@
     // ]
     // notice that each item in aData always start from 0 , and each entry in bData always start from the second entry in each aData item.
     // this is because "stack" splits the input data into several arrays, and "stack" them by adding each array on top of each other
-    // e.g. it looks at the first key, aData, then creates an array with that key. Then it creates the secodn array by adding aData on top of bData, then cData etc.
+    // e.g. it looks at the first key, aData, then creates an array with that key. Then it creates the second array by adding aData on top of bData, then cData etc.
     const stackedData = [];
     // Copy the stack offsets back into the data.
     // we need this code section to reformat the data to include year information.

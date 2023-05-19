@@ -1,5 +1,5 @@
 # This script simply takes the last.fm CSV data, and transform it into the format we need:
-# Date, Scruble #, New Scruble #
+# Date, Total Scrubble, Old Scrubble, New Scrubble
 # It will output a new CSV file with the correct format
 
 import pandas as pd
@@ -65,6 +65,8 @@ if __name__ == "__main__":
     filename = sys.argv[1]
 
     #TODO: Check if the CSV file is of the correct format. If not, give an error message and exit.
+
+    #TODO: If it's simply missing the column names, add them.
 
     df = load_csv(filename)
     find_new_scrubbles(df)
