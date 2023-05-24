@@ -8,9 +8,9 @@
             "name": "Python: Debug Reading CSV File",
             "type": "python",
             "request": "launch",
-            "program": "./data_process.py",
+            "program": "./Project/data_process.py",
             "console": "integratedTerminal",
-            "args": ["./psychoComstock.csv"],
+            "args": ["./Project/psychoComstock.csv"],
             "justMyCode": true
         }
     ]

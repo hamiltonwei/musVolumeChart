@@ -66,7 +66,13 @@ if __name__ == "__main__":
 
     #TODO: Check if the CSV file is of the correct format. If not, give an error message and exit.
 
-    #TODO: If it's simply missing the column names, add them.
+    # If it's simply missing the column names, add them.
+    with open(filename, 'r+') as f:
+        header = "Artist,Album,Track,Time"
+        first_line = f.readline()
+        if first_line != header:
+            f.seek(0, 0)
+            f.write(header + "\n")
 
     df = load_csv(filename)
     find_new_scrubbles(df)

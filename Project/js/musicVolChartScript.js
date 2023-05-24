@@ -133,9 +133,6 @@ function displayArea(stackedData, color, xScale, yScale){
 }
 
 
-
-
-
 // set the dimensions and margins of the graph
 var dimensions = {height: 666, width: 1000};
 var margin = {top: 20, right: 30, bottom: 30, left: 60};
@@ -154,12 +151,16 @@ d3.csv(csvPath, function(data) {
     var stackedData = stackData(data, keys);
     
     var one_col = stackedData[stackedData.length - 1]
+    // TODO: Make this function annonymous.
     function extract_num(d) {
         var data = d.values[1];
         return data;
     }
-    var max = d3.max(one_col, extract_num); //TODO: Max calculation is wrong here
+    var max = d3.max(one_col, extract_num);
     var scales = initializeScale(data, dimensions, max);
     addXYAxis(svg, dimensions, scales.xScale, scales.yScale); 
     displayArea(stackedData, color, scales.xScale, scales.yScale)
 })
+
+//TODO: Add legends
+//TODO: Add interaction
